@@ -27,6 +27,7 @@ class Link extends Model
         'active',
         'expires_at',
         'visits',
+        'qr_code',
     ];
 
     /**

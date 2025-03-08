@@ -22,7 +22,7 @@ class UpdateLinkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => ['required', 'string'],
+            'slug' => ['required', 'string', 'unique:links,slug,', 'regex:/^[a-zA-Z0-9-_]+$/'],
             'destination' => ['required', 'url'],
             'expires_at' => ['nullable', 'date'],
             'active' => ['nullable', 'boolean'],

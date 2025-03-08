@@ -22,10 +22,22 @@ class StoreLinkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => ['required', 'string', 'unique:links'],
+            'slug' => ['required', 'string', 'regex:/^[a-zA-Z0-9-_]+$/', 'unique:links'],
             'destination' => ['required', 'url'],
             'expires_at' => ['nullable', 'date'],
             'active' => ['nullable', 'boolean'],
+        ];
+    }
+
+    /**
+     * Get the validation messages that apply to the request.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'validation.regex' => 'The slug may only contain letters, numbers, dashes, and underscores.',
         ];
     }
 }

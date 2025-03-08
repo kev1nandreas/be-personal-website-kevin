@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Link;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLinkRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateLinkRequest;
-use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class LinkController extends Controller
 {
@@ -34,11 +36,16 @@ class LinkController extends Controller
      */
     public function store(StoreLinkRequest $request)
     {
+        $name = 'http://api.qrserver.com/v1/create-qr-code/?data=kevin-andreas.com/s/' . $request->slug . '&size=500x500';
+
+        $request['qr_code'] = $name;
+
         Link::create([
             'user_id' => auth()->user()->id,
             'slug' => $request->slug,
             'destination' => $request->destination,
             'expires_at' => $request->expires_at,
+            'qr_code' => $request->qr_code,
         ]);
 
         return response()->json([
@@ -66,6 +73,12 @@ class LinkController extends Controller
     public function update(UpdateLinkRequest $request, Link $link)
     {
         $link = Link::find($link->id);
+
+        if ($request->slug) {
+            $name = 'http://api.qrserver.com/v1/create-qr-code/?data=kevin-andreas.com/s/' . $request->slug . '&size=500x500';
+
+            $request['qr_code'] = $name;
+        }
 
         $link->update($request->all());
 
